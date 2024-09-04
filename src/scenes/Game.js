@@ -26,8 +26,12 @@ export class Game extends Scene
         this.platform = this.physics.add.staticGroup();
 
         this.platform.create(900, 300, 'platform1').setSize(360, 170);
-        this.platform.create(200, 700, 'platform2').setSize(400, 150);
-        this.platform.create(700, 800, 'platform1').setSize(360, 170);
+        this.platform.create(200, 400, 'platform2').setSize(400, 150);
+        this.platform.create(1000, 900, 'platform1').setSize(360, 170);
+        this.platform.create(-400, 500, 'platform1').setSize(360, 170);
+        this.platform.create(700, 600, 'platform2').setSize(400, 150);
+        this.platform.create(1400, 0, 'platform2').setSize(400, 150);
+        this.platform.create(1900, 300, 'platform1').setSize(360, 170);
         this.platform.children.iterate((platform, index) => {
             platform.body.checkCollision.down = false;
             platform.body.checkCollision.left = false;
@@ -56,6 +60,7 @@ export class Game extends Scene
         this.ninja.setGravityY(5000);
         this.ninja.setSize(60, 90);
         this.ninja.setOffset(22, 10);
+        this.ninja.setMaxVelocity(2000, 1900);
 
         this.physics.add.collider(this.ninja, this.platform);
 
@@ -63,6 +68,7 @@ export class Game extends Scene
 
         this.camaramain = this.cameras.main.startFollow(this.ninja);
         this.camaramain.setLerp(0.1, 0.1);
+        this.camaramain.fadeIn(2000, 0, 0 , 0);
         
     }
 
@@ -70,19 +76,18 @@ export class Game extends Scene
 
         if (this.keys.up.isDown && this.ninja.body.touching.down) {
             this.ninja.setVelocityY(-2000);
-            console.dir(this.camaramain);
         } else if (this.keys.down.isDown && !this.ninja.body.touching.down && this.ninja.body.velocity.y > 0) {
-            this.ninja.setVelocityY(1500);
+            this.ninja.setVelocityY(2500);
         } else if (this.keys.down.isDown && this.ninja.body.touching.down) {
             this.ninja.setFrame(5);
         }
 
         if (this.keys.right.isDown) {
-            this.ninja.setVelocityX(400);
+            this.ninja.setVelocityX(500);
             this.ninja.setFlipX(false);
             this.camaramain.originX = 0.4;
         } else if (this.keys.left.isDown) {
-            this.ninja.setVelocityX(-400);
+            this.ninja.setVelocityX(-500);
             this.ninja.setFlipX(true);
             this.camaramain.originX = 0.6;
         } else {
@@ -96,10 +101,18 @@ export class Game extends Scene
             this.ninja.setFrame(20);
         } else if (this.ninja.body.velocity.y < 0) {
             this.ninja.anims.play('ninja-jump', true);
+            
         } else if (this.ninja.body.velocity.x > 0 && this.ninja.body.touching.down) {
             this.ninja.anims.play('ninja-run', true);
         } else if (this.ninja.body.velocity.x < 0 && this.ninja.body.touching.down) {
             this.ninja.anims.play('ninja-run', true);
+        }
+
+        if(this.ninja.y > 2000) {
+            this.camaramain.fade(1000, 0, 0, 0);
+            setTimeout(() => {
+                this.scene.restart();
+            }, 1000)
         }
 
     }
