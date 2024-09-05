@@ -43,6 +43,7 @@ export class Game extends Scene
         this.platform.create(1900, 300, 'platform1').setSize(360, 170);
         this.platform.create(3300, 500, 'platform3').setSize(1730, 100).setScale(3.4).setOffset(-600, 24);
         this.verticalPlatform.create(3300, -50, 'platform9').setSize(50, 500).setScale(2, 1);
+        this.verticalPlatform.create(3000, -300, 'platform9').setSize(50, 500).setScale(2, 1);
 
 
         this.platform.children.iterate((platform) => {
@@ -50,8 +51,13 @@ export class Game extends Scene
             platform.body.checkCollision.left = false;
             platform.body.checkCollision.right = false;
         })
-        this.verticalPlatform.children.iterate((platform) => {
-            platform.angle = -90;
+        this.verticalPlatform.children.iterate((platform, index) => {
+            if (index === 0) {
+                platform.angle = -90;
+            }
+            if (index === 1) {
+                platform.angle = 90;
+            }
         })
 
         this.platform.setTint(0x111122);
@@ -82,10 +88,22 @@ export class Game extends Scene
         this.ninja.setMaxVelocity(2000, 1900);
         this.ninja.setTint(0x555555);
 
-        this.physics.add.collider(this.ninja, this.platform);
-        this.physics.add.collider(this.ninja, this.verticalPlatform);
-
         this.keys = this.input.keyboard.createCursorKeys();
+
+        function handleNinjaVplatformCollide( ninja) {
+            if(this.keys.up.isDown && ninja.body.touching.right) {
+                ninja.setVelocityX(-5000);
+                ninja.setVelocityY(-4000);
+            } else if (this.keys.up.isDown && ninja.body.touching.left) {
+                ninja.setVelocityX(5000);
+                ninja.setVelocityY(-4000);
+            }
+        }
+
+        this.physics.add.collider(this.ninja, this.platform);
+        this.physics.add.collider(this.ninja, this.verticalPlatform, handleNinjaVplatformCollide.bind(this));
+
+        
 
         this.camaramain = this.cameras.main.startFollow(this.ninja);
         this.camaramain.setLerp(0.1, 0.1);
