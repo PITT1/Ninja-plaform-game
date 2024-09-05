@@ -9,8 +9,8 @@ export class Game extends Scene
 
     preload () {
         this.load.setPath('assets');
-        this.load.image('background', 'bg.png');
-        this.load.image('logo', 'logo.png');
+        this.load.image('fondo1', '/backgrounds/fondo1.jpg');
+
         this.load.spritesheet('player', '/player/Sprite-ninja-sin-fondo-Sheet-100x100.png', {
             frameWidth: 100,
             frameHeight: 100,
@@ -19,11 +19,20 @@ export class Game extends Scene
         });
         this.load.image('platform1', '/platforms/platform1.png');
         this.load.image('platform2', '/platforms/platform2.png');
+        this.load.image('platform3', '/platforms/platform3.png');
+        this.load.image('platform4', '/platforms/platform4.png');
+        this.load.image('platform5', '/platforms/platform5.png');
+        this.load.image('platform6', '/platforms/platform6.png');
+        this.load.image('platform7', '/platforms/platform7.png');
+        this.load.image('platform8', '/platforms/platform8.png');
+        this.load.image('platform9', '/platforms/platform9.png');
     }
 
     create () {
-
+        this.fondo = this.add.image(0, 0, 'fondo1').setOrigin(0, 0).setScale(2);
+        this.fondo.setScrollFactor(0);
         this.platform = this.physics.add.staticGroup();
+        this.verticalPlatform = this.physics.add.staticGroup();
 
         this.platform.create(900, 300, 'platform1').setSize(360, 170);
         this.platform.create(200, 400, 'platform2').setSize(400, 150);
@@ -32,13 +41,23 @@ export class Game extends Scene
         this.platform.create(700, 600, 'platform2').setSize(400, 150);
         this.platform.create(1400, 0, 'platform2').setSize(400, 150);
         this.platform.create(1900, 300, 'platform1').setSize(360, 170);
-        this.platform.children.iterate((platform, index) => {
+        this.platform.create(3300, 500, 'platform3').setSize(1730, 100).setScale(3.4).setOffset(-600, 24);
+        this.verticalPlatform.create(3300, -50, 'platform9').setSize(50, 500).setScale(2, 1);
+
+
+        this.platform.children.iterate((platform) => {
             platform.body.checkCollision.down = false;
             platform.body.checkCollision.left = false;
             platform.body.checkCollision.right = false;
         })
+        this.verticalPlatform.children.iterate((platform) => {
+            platform.angle = -90;
+        })
 
-        this.ninja = this.physics.add.sprite(0, 0, 'player', 0);
+        this.platform.setTint(0x111122);
+        this.verticalPlatform.setTint(0x111122);
+
+        this.ninja = this.physics.add.sprite(-400, 0, 'player', 0);
         this.anims.create({
             key: 'ninja-idle',
             frames: this.anims.generateFrameNumbers('player', {start: 0, end: 4}),
@@ -61,8 +80,10 @@ export class Game extends Scene
         this.ninja.setSize(60, 90);
         this.ninja.setOffset(22, 10);
         this.ninja.setMaxVelocity(2000, 1900);
+        this.ninja.setTint(0x555555);
 
         this.physics.add.collider(this.ninja, this.platform);
+        this.physics.add.collider(this.ninja, this.verticalPlatform);
 
         this.keys = this.input.keyboard.createCursorKeys();
 

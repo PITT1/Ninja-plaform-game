@@ -8,7 +8,7 @@ const config = {
     width: 1024,
     height: 768,
     parent: 'game-container',
-    backgroundColor: '#000000',
+    backgroundColor: '001529',
     scale: {
         mode: Scale.FIT,
         autoCenter: Scale.CENTER_BOTH
