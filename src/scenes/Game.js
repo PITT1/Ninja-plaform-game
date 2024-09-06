@@ -26,6 +26,7 @@ export class Game extends Scene
         this.load.image('platform7', '/platforms/platform7.png');
         this.load.image('platform8', '/platforms/platform8.png');
         this.load.image('platform9', '/platforms/platform9.png');
+        this.load.image('helices1', '/obstacles/helices1.png');
     }
 
     create () {
@@ -33,6 +34,7 @@ export class Game extends Scene
         this.fondo.setScrollFactor(0);
         this.platform = this.physics.add.staticGroup();
         this.verticalPlatform = this.physics.add.staticGroup();
+        this.helice = this.physics.add.staticGroup();
 
         this.platform.create(900, 300, 'platform1').setSize(360, 170);
         this.platform.create(200, 400, 'platform2').setSize(400, 150);
@@ -44,8 +46,7 @@ export class Game extends Scene
         this.platform.create(3300, 500, 'platform3').setSize(1730, 100).setScale(3.4).setOffset(-600, 24);
         this.verticalPlatform.create(3300, -50, 'platform9').setSize(50, 500).setScale(2, 1);
         this.verticalPlatform.create(3000, -300, 'platform9').setSize(50, 500).setScale(2, 1);
-        this.platform.create(3700, -300, 'platform5').setSize(100, 150);
-        this.platform.create(4000, -300, 'platform5').setSize(100, 150);
+        this.helice.create(3300, -180, 'helices1');
 
 
 
@@ -53,26 +54,6 @@ export class Game extends Scene
             platform.body.checkCollision.down = false;
             platform.body.checkCollision.left = false;
             platform.body.checkCollision.right = false;
-            if (index === 8) {
-                this.tweens.add({
-                    targets: platform,
-                    x: 3550, 
-                    ease: 'Ease', 
-                    duration: 3000, 
-                    yoyo: true, 
-                    repeat: -1 
-                });
-            }
-            if (index === 9) {
-                this.tweens.add({
-                    targets: platform,
-                    x: 3850, 
-                    ease: 'Ease', 
-                    duration: 4000, 
-                    yoyo: true, 
-                    repeat: -1 
-                });
-            }
         })
         this.verticalPlatform.children.iterate((platform, index) => {
             if (index === 0) {
@@ -83,8 +64,23 @@ export class Game extends Scene
             }
         })
 
+        this.helice.children.iterate((helice) => {
+            console.dir(helice)
+            helice.setScale(2)
+            helice.setSize(200, 200);
+            helice.setOffset(-45, -45);
+            helice.setCircle(100);
+            this.tweens.add({
+                targets: helice,
+                angle: 360, 
+                duration: 1000, 
+                repeat: -1 
+            });
+        })
+
         this.platform.setTint(0x111122);
         this.verticalPlatform.setTint(0x111122);
+        this.helice.setTint(0x1111111);
 
 
         this.ninja = this.physics.add.sprite(-400, 0, 'player', 0);
@@ -124,8 +120,13 @@ export class Game extends Scene
             }
         }
 
+        function handleNinjaHeliceCollide (ninja) {
+            console.log("te hiciste daño");
+        }
+
         this.physics.add.collider(this.ninja, this.platform);
         this.physics.add.collider(this.ninja, this.verticalPlatform, handleNinjaVplatformCollide.bind(this));
+        this.physics.add.collider(this.ninja, this.helice, handleNinjaHeliceCollide.bind(this));
 
         
 
