@@ -44,12 +44,35 @@ export class Game extends Scene
         this.platform.create(3300, 500, 'platform3').setSize(1730, 100).setScale(3.4).setOffset(-600, 24);
         this.verticalPlatform.create(3300, -50, 'platform9').setSize(50, 500).setScale(2, 1);
         this.verticalPlatform.create(3000, -300, 'platform9').setSize(50, 500).setScale(2, 1);
+        this.platform.create(3700, -300, 'platform5').setSize(100, 150);
+        this.platform.create(4000, -300, 'platform5').setSize(100, 150);
 
 
-        this.platform.children.iterate((platform) => {
+
+        this.platform.children.iterate((platform, index) => {
             platform.body.checkCollision.down = false;
             platform.body.checkCollision.left = false;
             platform.body.checkCollision.right = false;
+            if (index === 8) {
+                this.tweens.add({
+                    targets: platform,
+                    x: 3550, 
+                    ease: 'Ease', 
+                    duration: 3000, 
+                    yoyo: true, 
+                    repeat: -1 
+                });
+            }
+            if (index === 9) {
+                this.tweens.add({
+                    targets: platform,
+                    x: 3850, 
+                    ease: 'Ease', 
+                    duration: 4000, 
+                    yoyo: true, 
+                    repeat: -1 
+                });
+            }
         })
         this.verticalPlatform.children.iterate((platform, index) => {
             if (index === 0) {
@@ -62,6 +85,7 @@ export class Game extends Scene
 
         this.platform.setTint(0x111122);
         this.verticalPlatform.setTint(0x111122);
+
 
         this.ninja = this.physics.add.sprite(-400, 0, 'player', 0);
         this.anims.create({
@@ -83,7 +107,7 @@ export class Game extends Scene
             frameRate: 15
         })
         this.ninja.setGravityY(5000);
-        this.ninja.setSize(60, 90);
+        this.ninja.setSize(55, 90);
         this.ninja.setOffset(22, 10);
         this.ninja.setMaxVelocity(2000, 1900);
         this.ninja.setTint(0x555555);
@@ -93,10 +117,10 @@ export class Game extends Scene
         function handleNinjaVplatformCollide( ninja) {
             if(this.keys.up.isDown && ninja.body.touching.right) {
                 ninja.setVelocityX(-5000);
-                ninja.setVelocityY(-4000);
+                ninja.setVelocityY(-1700);
             } else if (this.keys.up.isDown && ninja.body.touching.left) {
                 ninja.setVelocityX(5000);
-                ninja.setVelocityY(-4000);
+                ninja.setVelocityY(-1700);
             }
         }
 
