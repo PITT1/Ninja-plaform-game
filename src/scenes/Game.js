@@ -28,6 +28,12 @@ export class Game extends Scene
         this.load.image('platform8', '/platforms/platform8.png');
         this.load.image('platform9', '/platforms/platform9.png');
         this.load.image('helices1', '/obstacles/helices1.png');
+        this.load.spritesheet('burbuja', '/jumpers/burbuja-105x105-Spritesheet.png', {
+            frameWidth: 105,
+            frameHeight: 105,
+            startFrame: 0,
+            endFrame: 9
+        });
     }
 
     create () {
@@ -36,6 +42,7 @@ export class Game extends Scene
         this.platform = this.physics.add.staticGroup();
         this.verticalPlatform = this.physics.add.staticGroup();
         this.helice = this.physics.add.staticGroup();
+        this.burbuja = this.physics.add.staticGroup();
 
         this.platform.create(900, 300, 'platform1').setSize(360, 170);
         this.platform.create(200, 400, 'platform2').setSize(400, 150);
@@ -48,8 +55,14 @@ export class Game extends Scene
         this.verticalPlatform.create(3300, -50, 'platform9').setSize(50, 500).setScale(2, 1);
         this.verticalPlatform.create(3000, -300, 'platform9').setSize(50, 500).setScale(2, 1);
         this.helice.create(3300, -180, 'helices1');
+        this.platform.create(3700, -300, 'platform6').setScale(3).setSize(400, 100).setOffset(-100, 0);
+        this.burbuja.create(0, 0, 'burbuja', 0);
 
 
+        this.burbuja.children.iterate((burbuja) => {
+            burbuja.setCircle(42);
+            burbuja.setOffset(9, 9);
+        })
 
         this.platform.children.iterate((platform, index) => {
             platform.body.checkCollision.down = false;
@@ -130,10 +143,15 @@ export class Game extends Scene
                 ninja.setTint(0x555555);
             }, 100);
         }
+
+        function handleNinjaBurbujaCollide () {
+            console.log("tocando burbuja");
+        }
         
         this.physics.add.collider(this.ninja, this.platform);
         this.physics.add.collider(this.ninja, this.verticalPlatform, handleNinjaVplatformCollide.bind(this));
         this.physics.add.overlap(this.ninja, this.helice, handleNinjaHeliceCollide.bind(this));
+        this.physics.add.overlap(this.ninja, this.burbuja), handleNinjaBurbujaCollide.bind(this);
 
         
 
