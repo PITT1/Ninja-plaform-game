@@ -56,12 +56,13 @@ export class Game extends Scene
         this.verticalPlatform.create(3000, -300, 'platform9').setSize(50, 500).setScale(2, 1);
         this.helice.create(3300, -180, 'helices1');
         this.platform.create(3700, -300, 'platform6').setScale(3).setSize(400, 100).setOffset(-100, 0);
-        this.burbuja.create(0, 0, 'burbuja', 0);
+        this.burbuja.create(0, 100, 'burbuja', 0);
 
 
         this.burbuja.children.iterate((burbuja) => {
             burbuja.setCircle(42);
             burbuja.setOffset(9, 9);
+            burbuja.setTint(0xff0007);
         })
 
         this.platform.children.iterate((platform, index) => {
@@ -122,6 +123,13 @@ export class Game extends Scene
         this.ninja.setMaxVelocity(2000, 1900);
         this.ninja.setTint(0x555555);
 
+        this.anims.create({
+            key: 'burbuja-destroy',
+            frames: this.anims.generateFrameNumbers('burbuja', {start: 0, end: 9}),
+            repeat: 0,
+            frameRate: 30
+        })
+
         this.keys = this.input.keyboard.createCursorKeys();
 
         function handleNinjaVplatformCollide( ninja) {
@@ -144,14 +152,21 @@ export class Game extends Scene
             }, 100);
         }
 
-        function handleNinjaBurbujaCollide () {
-            console.log("tocando burbuja");
+        function handleNinjaBurbujaCollide (ninja, burbuja) {
+            if (this.keys.up.isDown) {
+                this.ninja.setVelocityY(-2000);
+                burbuja.anims.play('burbuja-destroy', true);
+                setTimeout(() => {
+                    burbuja.destroy();
+                }, 400);
+            }
+
         }
         
         this.physics.add.collider(this.ninja, this.platform);
         this.physics.add.collider(this.ninja, this.verticalPlatform, handleNinjaVplatformCollide.bind(this));
         this.physics.add.overlap(this.ninja, this.helice, handleNinjaHeliceCollide.bind(this));
-        this.physics.add.overlap(this.ninja, this.burbuja), handleNinjaBurbujaCollide.bind(this);
+        this.physics.add.overlap(this.ninja, this.burbuja, handleNinjaBurbujaCollide.bind(this));
 
         
 
