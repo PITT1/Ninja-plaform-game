@@ -6,6 +6,8 @@ export class Game extends Scene
     {
         super('Game');
         this.activeControls = true;
+        this.activeRight = true;
+        this.activeLeft = true;
     }
 
     preload () {
@@ -57,11 +59,13 @@ export class Game extends Scene
         this.platform.create(3300, 500, 'platform3').setSize(1730, 100).setScale(3.4).setOffset(-600, 24);
         this.verticalPlatform.create(3300, -50, 'platform9').setSize(50, 500).setScale(2, 1);
         this.verticalPlatform.create(3000, -300, 'platform9').setSize(50, 500).setScale(2, 1);
-        this.helice.create(3300, -180, 'helices1');
+        this.helice.create(3300, -100, 'helices1');
+        this.helice.create(3000, -450, 'helices1');
         this.platform.create(3700, -300, 'platform6').setScale(3).setSize(400, 100).setOffset(-100, 0);
         this.burbuja.create(4200, -600, 'burbuja', 0);
         this.burbuja.create(4500, -700, 'burbuja', 0);
         this.burbuja.create(4800, -600, 'burbuja', 0);
+        this.platform.create(5200, -600, 'platform6').setScale(3).setSize(400, 100).setOffset(-100, 0);
 
 
         this.burbuja.children.iterate((burbuja) => {
@@ -139,12 +143,17 @@ export class Game extends Scene
 
         function handleNinjaVplatformCollide( ninja) {
             if(this.keys.up.isDown && ninja.body.touching.right) {
-                ninja.setVelocityX(-5000);
+                this.activeControls = false;
+                ninja.setVelocityX(-1000);
                 ninja.setVelocityY(-1700);
             } else if (this.keys.up.isDown && ninja.body.touching.left) {
-                ninja.setVelocityX(5000);
+                this.activeControls = false;
+                ninja.setVelocityX(1400);
                 ninja.setVelocityY(-1700);
             }
+            setTimeout(() => {
+                this.activeControls = true;
+            }, 50);
         }
 
         function handleNinjaHeliceCollide (ninja) {
@@ -195,18 +204,19 @@ export class Game extends Scene
                 this.ninja.setVelocityY(-2000);
             } else if (this.keys.down.isDown && !this.ninja.body.touching.down && this.ninja.body.velocity.y > 0) {
                 this.ninja.setVelocityY(2500);
-            } else if (this.keys.down.isDown && this.ninja.body.touching.down) {
-                this.ninja.setFrame(5);
             }
-    
             if (this.keys.right.isDown) {
-                this.ninja.setVelocityX(500);
-                this.ninja.setFlipX(false);
-                this.camaramain.originX = 0.4;
+                if (this.activeRight) {
+                    this.ninja.setVelocityX(500);
+                    this.ninja.setFlipX(false);
+                    this.camaramain.originX = 0.4;   
+                }
             } else if (this.keys.left.isDown) {
-                this.ninja.setVelocityX(-500);
-                this.ninja.setFlipX(true);
-                this.camaramain.originX = 0.6;
+                if (this.activeLeft) {
+                    this.ninja.setVelocityX(-500);
+                    this.ninja.setFlipX(true);
+                    this.camaramain.originX = 0.6;   
+                }
             } else {
                 this.ninja.setVelocityX(0);
             }
