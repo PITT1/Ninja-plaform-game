@@ -28,6 +28,7 @@ export class Game extends Scene
         this.load.image('platform8', '/platforms/platform8.png');
         this.load.image('platform9', '/platforms/platform9.png');
         this.load.image('helices1', '/obstacles/helices1.png');
+        this.load.image('arbol1', '/backgrounds/arbol.png');
         this.load.spritesheet('burbuja', '/jumpers/burbuja-105x105-Spritesheet.png', {
             frameWidth: 105,
             frameHeight: 105,
@@ -45,6 +46,8 @@ export class Game extends Scene
         this.burbuja = this.physics.add.staticGroup();
 
         this.platform.create(900, 300, 'platform1').setSize(360, 170);
+        this.add.image(500, 70, 'arbol1').setTint(0x111111);
+        this.add.image(2200, 0, 'arbol1').setTint(0x111111);
         this.platform.create(200, 400, 'platform2').setSize(400, 150);
         this.platform.create(1000, 900, 'platform1').setSize(360, 170);
         this.platform.create(-400, 500, 'platform1').setSize(360, 170);
@@ -56,7 +59,9 @@ export class Game extends Scene
         this.verticalPlatform.create(3000, -300, 'platform9').setSize(50, 500).setScale(2, 1);
         this.helice.create(3300, -180, 'helices1');
         this.platform.create(3700, -300, 'platform6').setScale(3).setSize(400, 100).setOffset(-100, 0);
-        this.burbuja.create(0, 100, 'burbuja', 0);
+        this.burbuja.create(4200, -600, 'burbuja', 0);
+        this.burbuja.create(4500, -700, 'burbuja', 0);
+        this.burbuja.create(4800, -600, 'burbuja', 0);
 
 
         this.burbuja.children.iterate((burbuja) => {
@@ -98,7 +103,7 @@ export class Game extends Scene
         this.helice.setTint(0x1111111);
 
 
-        this.ninja = this.physics.add.sprite(-400, 0, 'player', 0);
+        this.ninja = this.physics.add.sprite(-400, 0, 'player', 0);// x:-400, y:0 posicion original
         this.anims.create({
             key: 'ninja-idle',
             frames: this.anims.generateFrameNumbers('player', {start: 0, end: 4}),
@@ -186,6 +191,7 @@ export class Game extends Scene
 
         if (this.activeControls) {
             if (this.keys.up.isDown && this.ninja.body.touching.down) {
+                console.log('x: ' + this.ninja.x + ' y: ' + this.ninja.y);
                 this.ninja.setVelocityY(-2000);
             } else if (this.keys.down.isDown && !this.ninja.body.touching.down && this.ninja.body.velocity.y > 0) {
                 this.ninja.setVelocityY(2500);
