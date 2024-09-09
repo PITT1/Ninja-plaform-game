@@ -239,9 +239,19 @@ export class Game extends Scene
 
             if (this.aKeys.z.isDown && !this.ninja.body.touching.down && !this.isDash) {
                 if (!this.ninja.flipX) {
-                    this.ninja.x = this.ninja.x + 200;   
+                    this.tweens.add({
+                        targets: this.ninja,
+                        x: this.ninja.x + 200,
+                        ease: 'linear',
+                        duration: 70
+                    })
                 } else if (this.ninja.flipX) {
-                    this.ninja.x = this.ninja.x - 200;
+                    this.tweens.add({
+                        targets: this.ninja,
+                        x: this.ninja.x - 200,
+                        ease: 'linear',
+                        duration: 70
+                    })
                 }
                 this.isDash = true;
             }
