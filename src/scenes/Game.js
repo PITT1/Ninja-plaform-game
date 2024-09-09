@@ -8,6 +8,7 @@ export class Game extends Scene
         this.activeControls = true;
         this.activeRight = true;
         this.activeLeft = true;
+        this.isDash = false;
     }
 
     preload () {
@@ -140,6 +141,7 @@ export class Game extends Scene
         })
 
         this.keys = this.input.keyboard.createCursorKeys();
+        this.aKeys = this.input.keyboard.addKeys('z, x, c');
 
         function handleNinjaVplatformCollide( ninja) {
             if(this.keys.up.isDown && ninja.body.touching.right) {
@@ -157,7 +159,6 @@ export class Game extends Scene
         }
 
         function handleNinjaHeliceCollide (ninja) {
-            console.log("te hiciste daño");
             this.camaramain.shake(200, 0.02);
             ninja.setTint(0xab2125);
             this.activeControls = false;
@@ -198,9 +199,10 @@ export class Game extends Scene
             this.activeControls = true;
         }
 
+        
+
         if (this.activeControls) {
             if (this.keys.up.isDown && this.ninja.body.touching.down) {
-                console.log('x: ' + this.ninja.x + ' y: ' + this.ninja.y);
                 this.ninja.setVelocityY(-2000);
             } else if (this.keys.down.isDown && !this.ninja.body.touching.down && this.ninja.body.velocity.y > 0) {
                 this.ninja.setVelocityY(2500);
@@ -233,6 +235,21 @@ export class Game extends Scene
                 this.ninja.anims.play('ninja-run', true);
             } else if (this.ninja.body.velocity.x < 0 && this.ninja.body.touching.down) {
                 this.ninja.anims.play('ninja-run', true);
+            }
+
+            if (this.aKeys.z.isDown && !this.ninja.body.touching.down && !this.isDash) {
+                if (!this.ninja.flipX) {
+                    this.ninja.x = this.ninja.x + 200;   
+                } else if (this.ninja.flipX) {
+                    this.ninja.x = this.ninja.x - 200;
+                }
+                this.isDash = true;
+            }
+            if (this.ninja.body.touching.down) {
+                this.isDash = false;
+            }
+            if (this.aKeys.c.isDown) {
+                console.log('x: ' + this.ninja.x + ' y: ' + this.ninja.y);
             }
         }
 
